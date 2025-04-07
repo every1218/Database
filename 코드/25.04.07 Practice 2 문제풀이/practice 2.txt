@@ -1,0 +1,362 @@
+
+SQL*Plus: Release 19.0.0.0.0 - Production on 월 4월 7 11:57:17 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+사용자명 입력: scott@iedb.kangwon.ac.kr
+비밀번호 입력:
+
+다음에 접속됨:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+
+SQL> --1번
+SQL> select ename sal from emp where sal>=2850
+  2  ;
+
+SAL
+--------------------
+JONES
+BLAKE
+SCOTT
+KING
+FORD
+
+SQL> select ename, sal from emp where sal>2850;
+
+ENAME                       SAL
+-------------------- ----------
+JONES                      2975
+SCOTT                      3000
+KING                       5000
+FORD                       3300
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> --2번
+SQL> select ename, deptno from emp where empno= 7566;
+
+ENAME                    DEPTNO
+-------------------- ----------
+JONES                        20
+
+
+
+
+
+
+
+
+SQL> --3번생략
+SQL> --4번생략
+SQL> --5번
+SQL> select ename, deptno from emp where deptno in (10,30);
+
+ENAME                    DEPTNO
+-------------------- ----------
+ALLEN                        30
+WARD                         30
+MARTIN                       30
+BLAKE                        30
+CLARK                        10
+KING                         10
+TURNER                       30
+JAMES                        30
+MILLER                       10
+
+9 행이 선택되었습니다.
+
+SQL> select ename, deptno from emp where deptno in (10,30) order by ename;
+
+ENAME                    DEPTNO
+-------------------- ----------
+ALLEN                        30
+BLAKE                        30
+CLARK                        10
+JAMES                        30
+KING                         10
+MARTIN                       30
+MILLER                       10
+TURNER                       30
+WARD                         30
+
+9 행이 선택되었습니다.
+
+
+
+
+
+
+
+
+
+
+
+SQL> --6번
+SQL> select ename Employee, deptno Monthly_Salary from emp where deptno in (10,30) order by ename;
+
+EMPLOYEE             MONTHLY_SALARY
+-------------------- --------------
+ALLEN                            30
+BLAKE                            30
+CLARK                            10
+JAMES                            30
+KING                             10
+MARTIN                           30
+MILLER                           10
+TURNER                           30
+WARD                             30
+
+9 행이 선택되었습니다.
+
+SQL> select ename Employee, deptno Monthly_Salary from emp where deptno in (10,30) AND sal>=1500;
+
+EMPLOYEE             MONTHLY_SALARY
+-------------------- --------------
+ALLEN                            30
+BLAKE                            30
+CLARK                            10
+KING                             10
+TURNER                           30
+
+SQL> select ename Employee, sal Monthly_Salary from emp where deptno in (10,30) AND sal=1500;
+
+EMPLOYEE             MONTHLY_SALARY
+-------------------- --------------
+ALLEN                          1600
+BLAKE                          2850
+CLARK                          2450
+KING                           5000
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> --7번 생략
+SQL> --8번
+SQL> select ename, job from emp where mgr is NULL;
+
+ENAME                JOB
+-------------------- ------------------
+KING                 PRESIDENT
+춘향이
+
+
+
+
+
+
+
+
+
+
+SQL> --9번
+SQL> select ename, sal, comm from emp where comm is not NULL AND order by sal DESC;
+select ename, sal, comm from emp where comm is not NULL AND order by sal DESC
+                                                            *
+1행에 오류:
+ORA-00936: 누락된 표현식
+
+
+SQL> select ename, sal, comm from emp where comm is not NULL order by sal DESC;
+
+ENAME                       SAL       COMM
+-------------------- ---------- ----------
+ALLEN                      1600        300
+TURNER                     1500          0
+MARTIN                     1250       1400
+WARD                       1250        500
+
+
+
+
+
+
+
+
+SQL> --10번
+SQL> select ename from emp where ename like '%A%';
+
+ENAME
+--------------------
+ALLEN
+WARD
+MARTIN
+BLAKE
+CLARK
+ADAMS
+JAMES
+
+7 행이 선택되었습니다.
+
+SQL> select ename from emp where ename like '__A%';
+
+ENAME
+--------------------
+BLAKE
+CLARK
+ADAMS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> --11번
+SQL> select ename from emp where deptno=30 OR mgr=7782;
+
+ENAME
+--------------------
+ALLEN
+WARD
+MARTIN
+BLAKE
+TURNER
+JAMES
+MILLER
+
+7 행이 선택되었습니다.
+
+SQL> select ename from emp where deptno=30 AND mgr=7782;
+
+선택된 레코드가 없습니다.
+
+SQL> select ename from emp where ename like '%LL%' AND (deptno=30 OR mgr=7782);
+
+ENAME
+--------------------
+ALLEN
+MILLER
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> --12번
+SQL> select ename, job, sal from emp
+  2  where job in('Clerk', 'Analyst')
+  3  AND sal in not (1000, 3000, 5000);
+AND sal in not (1000, 3000, 5000)
+           *
+3행에 오류:
+ORA-00936: 누락된 표현식
+
+
+SQL> AND sal not in (1000, 3000, 5000);
+SP2-0734: "AND sal no..."(으)로 시작되는 알 수 없는 명령 - 나머지 줄은 무시되었습니다.
+SQL> edit
+file afiedt.buf(이)가 기록되었습니다
+
+  1  select ename, job, sal from emp
+  2  where job in('Clerk', 'Analyst')
+  3* AND sal not in (1000, 3000, 5000)
+SQL> /
+
+선택된 레코드가 없습니다.
+
+SQL> select ename, job, sal from emp
+  2  where job in('Clerk', 'Analyst');
+
+선택된 레코드가 없습니다.
+
+SQL> select ename, job, sal from emp
+  2  where job in('CLERK', 'ANALYST')
+  3  AND sal not in (1000, 3000, 5000);
+
+ENAME                JOB                       SAL
+-------------------- ------------------ ----------
+SMITH                CLERK                     800
+ADAMS                CLERK                    1100
+JAMES                CLERK                     950
+FORD                 ANALYST                  3300
+MILLER               CLERK                    1300
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> --13번
+SQL> select ename, sal, comm from emp
+  2  where sal*10>=comm;
+
+ENAME                       SAL       COMM
+-------------------- ---------- ----------
+ALLEN                      1600        300
+WARD                       1250        500
+MARTIN                     1250       1400
+TURNER                     1500          0
+
+SQL> select ename, sal, comm from emp
+  2  where sal*10<=comm;
+
+선택된 레코드가 없습니다.
+
+SQL> select ename, sal, comm from emp
+  2  where sal*0.1<=comm;
+
+ENAME                       SAL       COMM
+-------------------- ---------- ----------
+ALLEN                      1600        300
+WARD                       1250        500
+MARTIN                     1250       1400
+
+SQL> select ename, sal, comm from emp
+  2  where sal*1.1>=comm;
+
+ENAME                       SAL       COMM
+-------------------- ---------- ----------
+ALLEN                      1600        300
+WARD                       1250        500
+TURNER                     1500          0
+
+SQL> select ename, sal, comm from emp
+  2  where sal*1.1<comm;
+
+ENAME                       SAL       COMM
+-------------------- ---------- ----------
+MARTIN                     1250       1400
+
+SQL>
