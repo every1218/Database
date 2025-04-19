@@ -10,7 +10,12 @@ Date
 28-OCT-97
 ```
 
+```sql
+select sysdate "Date" from dual;
+```
 ---
+
+
 
 **2. 직원 번호, 이름, 급여 및 15% 인상 급여 쿼리**
 
@@ -40,6 +45,9 @@ EMPNO ENAME  SAL New Salary
 7934 MILLER 1300       1495
 14 rows selected.`
 ```
+```sql
+select empno, ename, sal, round(sal*1.15,0) "New Salary" from emp;
+```
 ---
 
 **4. 급여 인상액이 추가된 p3q2.sql 수정 쿼리**
@@ -55,6 +63,9 @@ EMPNO ENAME  SAL New Salary Increase
 7698 BLAKE  2850       3278       428
 7782 CLARK  2450       2818       368
 7566 JONES  2975       3421       446`
+```
+```sql
+select empno, ename, sal, round(sal*1.15,0) "New Salary", round(sal*1.15,0)-sal Increase from emp;
 ```
 
 ---
@@ -111,6 +122,10 @@ ALLEN                199
 SMITH                202
 14 rows selected
 ```
+```sql
+select ename, round(months_between(sysdate, hiredate),0) AS MONTHS_WORKED from emp order by MONTHS_WORKED;
+```
+
 
 ---
 
@@ -139,7 +154,9 @@ ADAMS earns $1,100.00 monthly but wants $3,300.00.
 MILLER earns $1,300.00 monthly but wants $3,900.00.
 14 rows selected.
 ```
-
+```sql
+select ename||' earns '||to_char(sal, '$99,999.99')||' monthly but wants'|| to_char(sal*3, '$99,999.99') AS "Dream Salaries" from emp;
+```
 ---
 
 **8. 직원 이름 및 급여 표시 쿼리 (형식 지정)**
@@ -167,7 +184,9 @@ FORD       $$$$$$$$$$$3000
 MILLER     $$$$$$$$$$$1300
 14 rows selected.
 ```
-
+```sql
+select ename, lpad(to_char(sal), 15, '$') AS SALARY from emp;
+```
 ---
 
 **9. 직원 이름 (형식 지정) 및 길이 표시 쿼리**
@@ -187,7 +206,9 @@ Adams         5
 Miller        6
 6 rows selected.
 ```
-
+```sql
+select initcap(ename) AS Name, length(ename) AS Length from emp where ename like 'A%' or ename like 'J%' or ename like 'M%';
+```
 ---
 
 **10. 직원 이름, 입사일 및 요일 표시 쿼리**
@@ -215,7 +236,9 @@ MILLER     23-JAN-82   SATURDAY
 WARD       22-FEB-81   SUNDAY
 14 rows selected
 ```
-
+```sql
+select ename, hiredate, to_char(hiredate, 'DAY') AS "DAY" from emp order by to_char(hiredate, 'D');
+```
 ---
 
 **11. 직원 이름 및 커미션 표시 쿼리**
@@ -242,4 +265,8 @@ JAMES      No Commission
 FORD       No Commission
 MILLER     No Commission
 14 rows selected.
+```
+
+```sql
+select ename, NVL(to_char(comm), 'NO Commission') AS COMM from emp;
 ```
