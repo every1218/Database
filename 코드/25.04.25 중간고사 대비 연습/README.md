@@ -189,3 +189,25 @@ MANAGER
 ANALYST
 PRESIDENT
 ```
+
+---
+
+### 📘 SQL 실습 문제 채점 결과
+
+| 번호 | 쿼리 | 결과 | 피드백 |
+|------|------|------|--------|
+| 1️⃣ | `SELECT * FROM emp;` | ✅ **정답** | 전체 조회 쿼리 정확해요! |
+| 2️⃣ | `SELECT * FROM emp WHERE sal >= 1000;` | ✅ **정답** | 비교 연산자 정확히 사용했어요! |
+| 3️⃣ | `SELECT * FROM emp WHERE job IN ('SALESMAN', 'CLERK');` | ✅ **정답** | `IN` 연산자 사용 잘했어요! |
+| 4️⃣ | `SELECT * FROM emp ORDER BY deptno, ename;` | ✅ **정답** | 두 컬럼 기준 정렬 정확해요! |
+| 5️⃣ | `SELECT ename, sal, comm FROM emp WHERE comm IS NULL;` | ✅ **정답** | NULL 조건문 정확해요! |
+| 6️⃣ | `SELECT * FROM emp WHERE ename LIKE 'S%';` | ✅ **정답** | LIKE 패턴 매칭 잘했어요! |
+| 7️⃣ | `SELECT * FROM emp WHERE mgr IN (7902, 7566, 7788);` | ✅ **정답** | `IN` 조건문 문제없어요! |
+| 8️⃣ | `SELECT ename, job, sal FROM emp WHERE job = 'CLERK' AND sal > 1000;` | ✅ **정답** | 논리 연산자까지 완벽! |
+| 9️⃣ | `SELECT ename, sal, comm FROM emp WHERE comm IS NOT NULL AND comm != 0;` | ✅ **정답** | `IS NOT NULL`과 비교 연산자 조합 좋았어요! |
+| 🔟 | `SELECT DISTINCT job FROM emp;` | ✅ **정답** | 중복 제거 정확히 잘 했어요! |
+
+---
+
+### ✅ 총점: **10 / 10**
+
