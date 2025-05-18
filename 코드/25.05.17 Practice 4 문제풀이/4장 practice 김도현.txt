@@ -1,0 +1,608 @@
+
+SQL*Plus: Release 19.0.0.0.0 - Production on 일 5월 18 18:05:48 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+사용자명 입력: scott@iedb.kangwon.ac.kr
+비밀번호 입력:
+
+다음에 접속됨:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> --1번
+SQL> select e.ename, e.deptno, d.dame from emp e join dept d;
+select e.ename, e.deptno, d.dame from emp e join dept d
+                                                      *
+1행에 오류:
+ORA-00905: 누락된 키워드
+
+
+SQL> select e.ename, e.deptno, d.dname from emp e join dept d;
+select e.ename, e.deptno, d.dname from emp e join dept d
+                                                       *
+1행에 오류:
+ORA-00905: 누락된 키워드
+
+
+SQL> select e.ename, e.deptno, d.dname from emp e join dept d on e.deptno =d.deptno;
+
+ENAME                    DEPTNO DNAME
+-------------------- ---------- ----------------------------
+SMITH                        20 RESEARCH
+ALLEN                        30 SALES
+WARD                         30 SALES
+JONES                        20 RESEARCH
+MARTIN                       30 SALES
+BLAKE                        30 SALES
+CLARK                        10 ACCOUNTING
+SCOTT                        20 RESEARCH
+KING                         10 ACCOUNTING
+TURNER                       30 SALES
+ADAMS                        20 RESEARCH
+
+ENAME                    DEPTNO DNAME
+-------------------- ---------- ----------------------------
+JAMES                        30 SALES
+FORD                         20 RESEARCH
+MILLER                       10 ACCOUNTING
+
+14 행이 선택되었습니다.
+
+SQL> SET LINESIZE 200
+SQL> SET PAGESIZE 100
+SQL> SET COLSEP '|'
+SQL> COLUMN EMPNO FORMAT 9999
+SQL> COLUMN ENAME FORMAT A10
+SQL> COLUMN JOB FORMAT A9
+SQL> COLUMN MGR FORMAT 9999
+SQL> COLUMN HIREDATE FORMAT A8
+SQL> COLUMN SAL FORMAT 9999
+SQL> COLUMN COMM FORMAT 9999
+SQL> COLUMN DEPTNO FORMAT 99
+SQL> select e.ename, e.deptno, d.dname from emp e join dept d on e.deptno =d.deptno order by d.deptno;
+
+ENAME     |DEPTNO|DNAME
+----------|------|----------------------------
+CLARK     |    10|ACCOUNTING
+KING      |    10|ACCOUNTING
+MILLER    |    10|ACCOUNTING
+JONES     |    20|RESEARCH
+FORD      |    20|RESEARCH
+ADAMS     |    20|RESEARCH
+SMITH     |    20|RESEARCH
+SCOTT     |    20|RESEARCH
+WARD      |    30|SALES
+TURNER    |    30|SALES
+ALLEN     |    30|SALES
+JAMES     |    30|SALES
+BLAKE     |    30|SALES
+MARTIN    |    30|SALES
+
+14 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --2번
+SQL> select e.job, d.lob from emp e join dept d on e.deptno=30 & e.deptno=30;
+e의 값을 입력하십시오:
+구   1: select e.job, d.lob from emp e join dept d on e.deptno=30 & e.deptno=30
+신   1: select e.job, d.lob from emp e join dept d on e.deptno=30 deptno=30
+select e.job, d.lob from emp e join dept d on e.deptno=30 deptno=30
+                                                          *
+1행에 오류:
+ORA-00933: SQL 명령어가 올바르게 종료되지 않았습니다
+
+
+SQL> select distict e.job, d.loc from emp e join dept d on e.deptno=d.deptnowhere e.deptno=30;
+select distict e.job, d.loc from emp e join dept d on e.deptno=d.deptnowhere e.deptno=30
+                *
+1행에 오류:
+ORA-00923: FROM 키워드가 필요한 위치에 없습니다.
+
+
+SQL> select distinct e.job, d.loc from emp e join dept d on e.deptno=d.deptnowhere e.deptno=30;
+select distinct e.job, d.loc from emp e join dept d on e.deptno=d.deptnowhere e.deptno=30
+  *
+1행에 오류:
+ORA-00933: SQL 명령어가 올바르게 종료되지 않았습니다
+
+
+SQL> select distinct e.job, d.loc from emp e join dept d on e.deptno=d.deptno where e.deptno=30;
+
+JOB      |LOC
+---------|--------------------------
+SALESMAN |CHICAGO
+MANAGER  |CHICAGO
+CLERK    |CHICAGO
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --3번
+SQL> select e.ename, d.dname, d.loc from emp e join dept d on e.deptno = d.deptno where comm is not null;
+
+ENAME     |DNAME                       |LOC
+----------|----------------------------|--------------------------
+TURNER    |SALES                       |CHICAGO
+MARTIN    |SALES                       |CHICAGO
+WARD      |SALES                       |CHICAGO
+ALLEN     |SALES                       |CHICAGO
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --4번
+SQL> select e.ename, d.dname from emp e join dept d on e.deptno = d.deptno where ename like '%A%'
+  2  ;
+
+ENAME     |DNAME
+----------|----------------------------
+CLARK     |ACCOUNTING
+ADAMS     |RESEARCH
+JAMES     |SALES
+BLAKE     |SALES
+MARTIN    |SALES
+WARD      |SALES
+ALLEN     |SALES
+
+7 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --5번
+SQL> select e.ename, e.job, e.deptno, d.dname from emp e join dept d on e.deptno = d.deptno where d.dname = 'RESEARCH';
+
+ENAME     |JOB      |DEPTNO|DNAME
+----------|---------|------|----------------------------
+SMITH     |CLERK    |    20|RESEARCH
+JONES     |MANAGER  |    20|RESEARCH
+SCOTT     |ANALYST  |    20|RESEARCH
+ADAMS     |CLERK    |    20|RESEARCH
+FORD      |ANALYST  |    20|RESEARCH
+
+SQL> select e.ename, e.job, e.deptno, d.dname from emp e join dept d on e.deptno = d.deptno where d.loc = 'DALLAS';
+
+ENAME     |JOB      |DEPTNO|DNAME
+----------|---------|------|----------------------------
+SMITH     |CLERK    |    20|RESEARCH
+JONES     |MANAGER  |    20|RESEARCH
+SCOTT     |ANALYST  |    20|RESEARCH
+ADAMS     |CLERK    |    20|RESEARCH
+FORD      |ANALYST  |    20|RESEARCH
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --6번
+SQL> select e.ename AS "Employee", e.empno AS "Emp#", m.ename AS "Manager",e.mgr AS "Mgr#" from emp e join emp m on e.mgr = m.empno;
+
+Employee            |      Emp#|Manager             |      Mgr#
+--------------------|----------|--------------------|----------
+FORD                |      7902|JONES               |      7566
+SCOTT               |      7788|JONES               |      7566
+JAMES               |      7900|BLAKE               |      7698
+TURNER              |      7844|BLAKE               |      7698
+MARTIN              |      7654|BLAKE               |      7698
+WARD                |      7521|BLAKE               |      7698
+ALLEN               |      7499|BLAKE               |      7698
+MILLER              |      7934|CLARK               |      7782
+ADAMS               |      7876|SCOTT               |      7788
+CLARK               |      7782|KING                |      7839
+BLAKE               |      7698|KING                |      7839
+JONES               |      7566|KING                |      7839
+SMITH               |      7369|FORD                |      7902
+
+13 행이 선택되었습니다.
+
+SQL> select e.ename AS "Employee", e.empno AS "Emp#", m.ename AS "Manager",m.empno AS "Mgr#" from emp e join emp m on e.mgr = m.empno;
+
+Employee            |      Emp#|Manager             |      Mgr#
+--------------------|----------|--------------------|----------
+FORD                |      7902|JONES               |      7566
+SCOTT               |      7788|JONES               |      7566
+JAMES               |      7900|BLAKE               |      7698
+TURNER              |      7844|BLAKE               |      7698
+MARTIN              |      7654|BLAKE               |      7698
+WARD                |      7521|BLAKE               |      7698
+ALLEN               |      7499|BLAKE               |      7698
+MILLER              |      7934|CLARK               |      7782
+ADAMS               |      7876|SCOTT               |      7788
+CLARK               |      7782|KING                |      7839
+BLAKE               |      7698|KING                |      7839
+JONES               |      7566|KING                |      7839
+SMITH               |      7369|FORD                |      7902
+
+13 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --7번
+SQL> select e.ename AS "Employee", e.empno AS "Emp#", m.ename AS "Manager",m.empno AS "Mgr#" from emp e left join emp m on e.mgr = m.empno;
+
+Employee            |      Emp#|Manager             |      Mgr#
+--------------------|----------|--------------------|----------
+FORD                |      7902|JONES               |      7566
+SCOTT               |      7788|JONES               |      7566
+JAMES               |      7900|BLAKE               |      7698
+TURNER              |      7844|BLAKE               |      7698
+MARTIN              |      7654|BLAKE               |      7698
+WARD                |      7521|BLAKE               |      7698
+ALLEN               |      7499|BLAKE               |      7698
+MILLER              |      7934|CLARK               |      7782
+ADAMS               |      7876|SCOTT               |      7788
+CLARK               |      7782|KING                |      7839
+BLAKE               |      7698|KING                |      7839
+JONES               |      7566|KING                |      7839
+SMITH               |      7369|FORD                |      7902
+KING                |      7839|                    |
+
+14 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --8번
+SQL> select e.deptno AS "DEPARTMENT", e.ename AS "EMPLOYEE", m.ename AS "COLLEAGUE" from emp e join emp m on e.deptno = m.deptno;
+
+DEPARTMENT|EMPLOYEE            |COLLEAGUE
+----------|--------------------|--------------------
+        20|FORD                |SMITH
+        20|ADAMS               |SMITH
+        20|SCOTT               |SMITH
+        20|JONES               |SMITH
+        20|SMITH               |SMITH
+        30|JAMES               |ALLEN
+        30|TURNER              |ALLEN
+        30|BLAKE               |ALLEN
+        30|MARTIN              |ALLEN
+        30|WARD                |ALLEN
+        30|ALLEN               |ALLEN
+        30|JAMES               |WARD
+        30|TURNER              |WARD
+        30|BLAKE               |WARD
+        30|MARTIN              |WARD
+        30|WARD                |WARD
+        30|ALLEN               |WARD
+        20|FORD                |JONES
+        20|ADAMS               |JONES
+        20|SCOTT               |JONES
+        20|JONES               |JONES
+        20|SMITH               |JONES
+        30|JAMES               |MARTIN
+        30|TURNER              |MARTIN
+        30|BLAKE               |MARTIN
+        30|MARTIN              |MARTIN
+        30|WARD                |MARTIN
+        30|ALLEN               |MARTIN
+        30|JAMES               |BLAKE
+        30|TURNER              |BLAKE
+        30|BLAKE               |BLAKE
+        30|MARTIN              |BLAKE
+        30|WARD                |BLAKE
+        30|ALLEN               |BLAKE
+        10|MILLER              |CLARK
+        10|KING                |CLARK
+        10|CLARK               |CLARK
+        20|FORD                |SCOTT
+        20|ADAMS               |SCOTT
+        20|SCOTT               |SCOTT
+        20|JONES               |SCOTT
+        20|SMITH               |SCOTT
+        10|MILLER              |KING
+        10|KING                |KING
+        10|CLARK               |KING
+        30|JAMES               |TURNER
+        30|TURNER              |TURNER
+        30|BLAKE               |TURNER
+        30|MARTIN              |TURNER
+        30|WARD                |TURNER
+        30|ALLEN               |TURNER
+        20|FORD                |ADAMS
+        20|ADAMS               |ADAMS
+        20|SCOTT               |ADAMS
+        20|JONES               |ADAMS
+        20|SMITH               |ADAMS
+        30|JAMES               |JAMES
+        30|TURNER              |JAMES
+        30|BLAKE               |JAMES
+        30|MARTIN              |JAMES
+        30|WARD                |JAMES
+        30|ALLEN               |JAMES
+        20|FORD                |FORD
+        20|ADAMS               |FORD
+        20|SCOTT               |FORD
+        20|JONES               |FORD
+        20|SMITH               |FORD
+        10|MILLER              |MILLER
+        10|KING                |MILLER
+        10|CLARK               |MILLER
+
+70 행이 선택되었습니다.
+
+SQL> select e.deptno AS "DEPARTMENT", e.ename AS "EMPLOYEE", m.ename AS "COLLEAGUE" from emp e join emp m on e.deptno = m.deptno AND e.empno != m.empnoorder by e.deptno;
+
+DEPARTMENT|EMPLOYEE            |COLLEAGUE
+----------|--------------------|--------------------
+        10|MILLER              |CLARK
+        10|KING                |CLARK
+        10|MILLER              |KING
+        10|CLARK               |MILLER
+        10|KING                |MILLER
+        10|CLARK               |KING
+        20|JONES               |SMITH
+        20|SCOTT               |SMITH
+        20|FORD                |SMITH
+        20|ADAMS               |SMITH
+        20|SMITH               |FORD
+        20|JONES               |FORD
+        20|SCOTT               |FORD
+        20|ADAMS               |FORD
+        20|SMITH               |ADAMS
+        20|JONES               |ADAMS
+        20|SCOTT               |ADAMS
+        20|FORD                |ADAMS
+        20|SMITH               |SCOTT
+        20|JONES               |SCOTT
+        20|ADAMS               |SCOTT
+        20|FORD                |SCOTT
+        20|SMITH               |JONES
+        20|SCOTT               |JONES
+        20|ADAMS               |JONES
+        20|FORD                |JONES
+        30|WARD                |BLAKE
+        30|JAMES               |WARD
+        30|WARD                |ALLEN
+        30|MARTIN              |ALLEN
+        30|ALLEN               |JAMES
+        30|JAMES               |ALLEN
+        30|TURNER              |JAMES
+        30|BLAKE               |JAMES
+        30|BLAKE               |ALLEN
+        30|TURNER              |ALLEN
+        30|JAMES               |TURNER
+        30|BLAKE               |TURNER
+        30|MARTIN              |TURNER
+        30|MARTIN              |BLAKE
+        30|TURNER              |BLAKE
+        30|JAMES               |BLAKE
+        30|ALLEN               |MARTIN
+        30|WARD                |MARTIN
+        30|BLAKE               |MARTIN
+        30|TURNER              |MARTIN
+        30|JAMES               |MARTIN
+        30|WARD                |JAMES
+        30|MARTIN              |JAMES
+        30|ALLEN               |TURNER
+        30|WARD                |TURNER
+        30|ALLEN               |WARD
+        30|MARTIN              |WARD
+        30|BLAKE               |WARD
+        30|TURNER              |WARD
+        30|ALLEN               |BLAKE
+
+56 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --9번
+SQL> DESC salgrade
+ 이름  널?       유형
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ GRADE   NUMBER
+ LOSAL   NUMBER
+ HISAL   NUMBER
+
+SQL> select e.ename, e.job, d.dname, e.sal, s.grade
+  2  from emp e
+  3  join dept d on e.deptno = d.deptno
+  4  join salgrade s on e.sal>=s.losal and e.sal <= s.hisal;
+
+ENAME     |JOB      |DNAME                       |  SAL|     GRADE
+----------|---------|----------------------------|-----|----------
+KING      |PRESIDENT|ACCOUNTING                  | 5000|         5
+FORD      |ANALYST  |RESEARCH                    | 3300|         5
+SCOTT     |ANALYST  |RESEARCH                    | 3000|         4
+JONES     |MANAGER  |RESEARCH                    | 2975|         4
+CLARK     |MANAGER  |ACCOUNTING                  | 2850|         4
+BLAKE     |MANAGER  |SALES                       | 2850|         4
+ALLEN     |SALESMAN |SALES                       | 1600|         3
+TURNER    |SALESMAN |SALES                       | 1500|         3
+MILLER    |CLERK    |ACCOUNTING                  | 1300|         2
+WARD      |SALESMAN |SALES                       | 1250|         2
+MARTIN    |SALESMAN |SALES                       | 1250|         2
+ADAMS     |CLERK    |RESEARCH                    | 1100|         1
+JAMES     |CLERK    |SALES                       |  950|         1
+SMITH     |CLERK    |RESEARCH                    |  800|         1
+
+14 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --10번
+SQL> select e1.ename, e1.hiredate from emp e1 join emp e2 on e2.ename='BLAKE' where e1.hiredate>e2.hiredate;
+
+ENAME     |HIREDATE
+----------|--------
+MARTIN    |81/09/28
+CLARK     |81/06/09
+SCOTT     |87/04/19
+KING      |81/11/17
+TURNER    |81/09/08
+ADAMS     |87/05/23
+JAMES     |81/12/03
+FORD      |81/12/03
+MILLER    |82/01/23
+
+9 행이 선택되었습니다.
+
+SQL> select e1.ename, e1.hiredate from emp e1 join emp e2 on e2.ename='BLAKE' where e1.hiredate<e2.hiredate;
+
+ENAME     |HIREDATE
+----------|--------
+SMITH     |80/12/17
+ALLEN     |81/02/20
+WARD      |81/02/22
+JONES     |81/04/02
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> 11번
+SP2-0042: 알 수 없는 명령어 "11번" - 나머지 줄 무시.
+SQL> --11번
+SQL> select e.ename AS "Employee", e.hiredate AS "Emp Hiredate", m.ename AS"Manager", m.hiredate AS "Mgr Hiredate"
+  2  from e
+  3  join emp m on e.mgr = m.empno
+  4  where e.hiredate<m.hiredate;
+from e
+     *
+2행에 오류:
+ORA-00942: 테이블 또는 뷰가 존재하지 않습니다
+
+
+SQL> select e.ename AS "Employee", e.hiredate AS "Emp Hiredate", m.ename AS"Manager", m.hiredate AS "Mgr Hiredate"
+  2  from e
+  3  join emp m on e.mgr = m.empno
+  4
+SQL> select e.ename AS "Employee", e.hiredate AS "Emp Hiredate", m.ename AS"Manager", m.hiredate AS "Mgr Hiredate"
+  2  from emp e
+  3  join emp m on e.mgr = m.empno
+  4  where e.hiredate<m.hiredate;
+
+Employee            |Emp Hire|Manager             |Mgr Hire
+--------------------|--------|--------------------|--------
+WARD                |81/02/22|BLAKE               |81/05/01
+ALLEN               |81/02/20|BLAKE               |81/05/01
+CLARK               |81/06/09|KING                |81/11/17
+BLAKE               |81/05/01|KING                |81/11/17
+JONES               |81/04/02|KING                |81/11/17
+SMITH               |80/12/17|FORD                |81/12/03
+
+6 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --12번
+SQL> select RPAD(ename, 9) || RPAD('*', sal/100, '*') AS EMPLOYEE_AND_THEIR_SALARIES
+  2  from emp
+  3  order by sal desc;
+
+EMPLOYEE_AND_THEIR_SALARIES
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+KING     **************************************************
+FORD     *********************************
+SCOTT    ******************************
+JONES    *****************************
+CLARK    ****************************
+BLAKE    ****************************
+ALLEN    ****************
+TURNER   ***************
+MILLER   *************
+WARD     ************
+MARTIN   ************
+ADAMS    ***********
+JAMES    *********
+SMITH    ********
+
+14 행이 선택되었습니다.
+
+SQL>
