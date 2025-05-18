@@ -1,0 +1,197 @@
+
+SQL*Plus: Release 19.0.0.0.0 - Production on 일 5월 18 20:16:16 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+사용자명 입력: scott@iedb.kangwon.ac.kr
+비밀번호 입력:
+
+다음에 접속됨:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> --1번
+SQL> select ename, hiredate from emp wehre deptno = (select deptno from empwhere ename = 'BLACK') AND ename != 'BLACK';
+select ename, hiredate from emp wehre deptno = (select deptno from emp where ename = 'BLACK') AND ename != 'BLACK'
+                                      *
+1행에 오류:
+ORA-00933: SQL 명령어가 올바르게 종료되지 않았습니다
+
+
+SQL> select ename, hiredate from emp where deptno = (select deptno from empwhere ename = 'BLACK') AND ename != 'BLACK';
+
+선택된 레코드가 없습니다.
+
+SQL> SELECT ename, hiredate
+  2  FROM emp
+  3  WHERE deptno = (
+  4      SELECT deptno
+  5      FROM emp
+  6      WHERE ename = 'BLAKE'
+  7  )
+  8  AND ename != 'BLAKE';
+
+ENAME                HIREDATE
+-------------------- --------
+ALLEN                81/02/20
+WARD                 81/02/22
+MARTIN               81/09/28
+TURNER               81/09/08
+JAMES                81/12/03
+
+SQL> select ename, hiredate from emp where deptno = (select deptno from empwhere ename = 'BLAKE') AND ename != 'BLAKE';
+
+ENAME                HIREDATE
+-------------------- --------
+ALLEN                81/02/20
+WARD                 81/02/22
+MARTIN               81/09/28
+TURNER               81/09/08
+JAMES                81/12/03
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --2번
+SQL> select empno, ename from emp where sal > (select avg(sal) from emp) order by sal desc;
+
+     EMPNO ENAME
+---------- --------------------
+      7839 KING
+      7902 FORD
+      7788 SCOTT
+      7566 JONES
+      7698 BLAKE
+      7782 CLARK
+
+6 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --3번
+SQL> select empno, ename from emp where deptno in (select distinct deptno from emp where ename like '%T%');
+
+     EMPNO ENAME
+---------- --------------------
+      7902 FORD
+      7876 ADAMS
+      7788 SCOTT
+      7566 JONES
+      7369 SMITH
+      7900 JAMES
+      7844 TURNER
+      7698 BLAKE
+      7654 MARTIN
+      7521 WARD
+      7499 ALLEN
+
+11 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --4번
+SQL> select e.ename, e.deptno, e.job from emp e join dept d on e.deptno = d.deptno where d.loc = 'DALLAS';
+
+ENAME                    DEPTNO JOB
+-------------------- ---------- ------------------
+SMITH                        20 CLERK
+JONES                        20 MANAGER
+SCOTT                        20 ANALYST
+ADAMS                        20 CLERK
+FORD                         20 ANALYST
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --5번
+SQL> select ename, sal from emp where mgr = (select empno from emp where ename = 'KING');
+
+ENAME                       SAL
+-------------------- ----------
+JONES                      2975
+BLAKE                      2850
+CLARK                      2850
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --6번
+SQL> select e.deptno, e.ename, e.job from emp e join dept d on e.deptno = d.deptno where d.dname = 'SALES';
+
+    DEPTNO ENAME                JOB
+---------- -------------------- ------------------
+        30 ALLEN                SALESMAN
+        30 WARD                 SALESMAN
+        30 MARTIN               SALESMAN
+        30 BLAKE                MANAGER
+        30 TURNER               SALESMAN
+        30 JAMES                CLERK
+
+6 행이 선택되었습니다.
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> --7번
+SQL> select empno, ename, sal
+  2  from emp
+  3  where deptno in(
+  4  select distinct deptno from emp where ename like '%T%'
+  5  and sal > (select AVG(sal) from emp) );
+
+     EMPNO ENAME                       SAL
+---------- -------------------- ----------
+      7902 FORD                       3300
+      7876 ADAMS                      1100
+      7788 SCOTT                      3000
+      7566 JONES                      2975
+      7369 SMITH                       800
+
+SQL>
