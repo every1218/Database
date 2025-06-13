@@ -1,0 +1,430 @@
+
+SQL*Plus: Release 19.0.0.0.0 - Production on 금 6월 13 18:57:08 2025
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+사용자명 입력: 김도현@iedb.kangwon.ac.kr
+비밀번호 입력:
+
+다음에 접속됨:
+Oracle Database 11g Enterprise Edition Release 11.2.0.1.0 - 64bit Production
+With the Partitioning, OLAP, Data Mining and Real Application Testing options
+
+SQL> select * from tab;
+
+TNAME                                                        TABTYPE
+------------------------------------------------------------ --------------
+ CLUSTERID
+----------
+DEPT                                                         TABLE
+
+
+EMP                                                          TABLE
+
+
+EMP10                                                        VIEW
+
+
+
+TNAME                                                        TABTYPE
+------------------------------------------------------------ --------------
+ CLUSTERID
+----------
+EMP_DEPT                                                     VIEW
+
+
+EMP_PUB                                                      VIEW
+
+
+SALGRADE                                                     TABLE
+
+
+
+TNAME                                                        TABTYPE
+------------------------------------------------------------ --------------
+ CLUSTERID
+----------
+SAL_REPORT                                                   VIEW
+
+
+
+7 행이 선택되었습니다.
+
+SQL> SET LINESIZE 200
+SQL> SET PAGESIZE 100
+SQL> SET COLSEP '|'
+SQL> COLUMN EMPNO FORMAT 9999
+SQL> COLUMN ENAME FORMAT A10
+SQL> COLUMN JOB FORMAT A9
+SQL> COLUMN MGR FORMAT 9999
+SQL> COLUMN HIREDATE FORMAT A8
+SQL> COLUMN SAL FORMAT 9999
+SQL> COLUMN COMM FORMAT 9999
+SQL> COLUMN DEPTNO FORMAT 99
+SQL> select * from emp;
+
+EMPNO|ENAME     |JOB      |  MGR|HIREDATE|  SAL| COMM|DEPTNO|CELL
+-----|----------|---------|-----|--------|-----|-----|------|----------------------
+ 7369|SMITH     |CLERK    | 7902|80/12/17|  800|     |    20|
+ 7499|ALLEN     |SALESMAN | 7698|81/02/20| 1600|  300|    30|
+ 7521|WARD      |SALESMAN | 7698|81/02/22| 1250|  500|    30|
+ 7566|JONES     |MANAGER  | 7839|81/04/02| 2975|     |    20|
+ 7654|MARTIN    |SALESMAN | 7698|81/09/28| 1250| 1400|    30|
+ 7698|BLAKE     |MANAGER  | 7839|81/05/01| 2850|     |    30|
+ 7782|CLARK     |MANAGER  | 7839|81/06/09| 2450|     |    10|
+ 7788|SCOTT     |ANALYST  | 7566|87/04/19| 3000|     |    20|
+ 7839|KING      |PRESIDENT|     |81/11/17| 5000|     |    10|
+ 7844|TURNER    |SALESMAN | 7698|81/09/08| 1500|    0|    30|
+ 7876|ADAMS     |CLERK    | 7788|87/05/23| 1100|     |    20|
+ 7900|JAMES     |CLERK    | 7698|81/12/03|  950|     |    30|
+ 7902|FORD      |ANALYST  | 7566|81/12/03| 3300|     |    20|
+ 7934|MILLER    |CLERK    | 7782|82/01/23| 1300|     |    10|
+
+14 행이 선택되었습니다.
+
+SQL> alter table emp drop column cell;
+
+테이블이 변경되었습니다.
+
+SQL> commit
+  2  ;
+
+커밋이 완료되었습니다.
+
+SQL> select * from emp;
+
+EMPNO|ENAME     |JOB      |  MGR|HIREDATE|  SAL| COMM|DEPTNO
+-----|----------|---------|-----|--------|-----|-----|------
+ 7369|SMITH     |CLERK    | 7902|80/12/17|  800|     |    20
+ 7499|ALLEN     |SALESMAN | 7698|81/02/20| 1600|  300|    30
+ 7521|WARD      |SALESMAN | 7698|81/02/22| 1250|  500|    30
+ 7566|JONES     |MANAGER  | 7839|81/04/02| 2975|     |    20
+ 7654|MARTIN    |SALESMAN | 7698|81/09/28| 1250| 1400|    30
+ 7698|BLAKE     |MANAGER  | 7839|81/05/01| 2850|     |    30
+ 7782|CLARK     |MANAGER  | 7839|81/06/09| 2450|     |    10
+ 7788|SCOTT     |ANALYST  | 7566|87/04/19| 3000|     |    20
+ 7839|KING      |PRESIDENT|     |81/11/17| 5000|     |    10
+ 7844|TURNER    |SALESMAN | 7698|81/09/08| 1500|    0|    30
+ 7876|ADAMS     |CLERK    | 7788|87/05/23| 1100|     |    20
+ 7900|JAMES     |CLERK    | 7698|81/12/03|  950|     |    30
+ 7902|FORD      |ANALYST  | 7566|81/12/03| 3300|     |    20
+ 7934|MILLER    |CLERK    | 7782|82/01/23| 1300|     |    10
+
+14 행이 선택되었습니다.
+
+SQL> select * from dept;
+
+DEPTNO|DNAME                       |LOC
+------|----------------------------|--------------------------
+    10|ACCOUNTING                  |NEW YORK
+    20|RESEARCH                    |DALLAS
+    30|SALES                       |CHICAGO
+    40|OPERATIONS                  |BOSTON
+
+SQL> select ename, job from emp where (deptno, job) in (select deptno, job from emp where deptno in (10,20));
+
+ENAME     |JOB
+----------|---------
+ADAMS     |CLERK
+SMITH     |CLERK
+JONES     |MANAGER
+CLARK     |MANAGER
+FORD      |ANALYST
+SCOTT     |ANALYST
+KING      |PRESIDENT
+MILLER    |CLERK
+
+8 행이 선택되었습니다.
+
+SQL> select deptno, avg_sal from (select deptno, avg(sal) from emp group bydeptno) sub where avg_sal >2000;
+select deptno, avg_sal from (select deptno, avg(sal) from emp group by deptno) sub where avg_sal >2000
+             *
+1행에 오류:
+ORA-00904: "AVG_SAL": 부적합한 식별자
+
+
+SQL> select deptno, avg_sal from (select deptno, avg(sal) avg_sal from emp group by deptno) sub where avg_sal >2000;
+
+DEPTNO|   AVG_SAL
+------|----------
+    20|      2235
+    10|2916.66667
+
+SQL> select e.ename, e.job, e.deptno, d.dname from emp e join dept d on d.loc = 'DALLAS';
+
+ENAME     |JOB      |DEPTNO|DNAME
+----------|---------|------|----------------------------
+SMITH     |CLERK    |    20|RESEARCH
+ALLEN     |SALESMAN |    30|RESEARCH
+WARD      |SALESMAN |    30|RESEARCH
+JONES     |MANAGER  |    20|RESEARCH
+MARTIN    |SALESMAN |    30|RESEARCH
+BLAKE     |MANAGER  |    30|RESEARCH
+CLARK     |MANAGER  |    10|RESEARCH
+SCOTT     |ANALYST  |    20|RESEARCH
+KING      |PRESIDENT|    10|RESEARCH
+TURNER    |SALESMAN |    30|RESEARCH
+ADAMS     |CLERK    |    20|RESEARCH
+JAMES     |CLERK    |    30|RESEARCH
+FORD      |ANALYST  |    20|RESEARCH
+MILLER    |CLERK    |    10|RESEARCH
+
+14 행이 선택되었습니다.
+
+SQL> select e.ename, e.job, e.deptno, d.dname from emp e join dept d on e.deptno = d.deptno and d.loc = 'DALLAS';
+
+ENAME     |JOB      |DEPTNO|DNAME
+----------|---------|------|----------------------------
+JONES     |MANAGER  |    20|RESEARCH
+FORD      |ANALYST  |    20|RESEARCH
+ADAMS     |CLERK    |    20|RESEARCH
+SMITH     |CLERK    |    20|RESEARCH
+SCOTT     |ANALYST  |    20|RESEARCH
+
+SQL> select e1.deptno, e1.ename, e2.ename from emp e1 join emp e2 on e1.deptno = e2.deptno and e1.ename != e2.ename order by e1.deptno;
+
+DEPTNO|ENAME     |ENAME
+------|----------|----------
+    10|MILLER    |CLARK
+    10|KING      |CLARK
+    10|MILLER    |KING
+    10|CLARK     |MILLER
+    10|KING      |MILLER
+    10|CLARK     |KING
+    20|JONES     |SMITH
+    20|SCOTT     |SMITH
+    20|FORD      |SMITH
+    20|ADAMS     |SMITH
+    20|SMITH     |FORD
+    20|JONES     |FORD
+    20|SCOTT     |FORD
+    20|ADAMS     |FORD
+    20|SMITH     |ADAMS
+    20|JONES     |ADAMS
+    20|SCOTT     |ADAMS
+    20|FORD      |ADAMS
+    20|SMITH     |SCOTT
+    20|JONES     |SCOTT
+    20|ADAMS     |SCOTT
+    20|FORD      |SCOTT
+    20|SMITH     |JONES
+    20|SCOTT     |JONES
+    20|ADAMS     |JONES
+    20|FORD      |JONES
+    30|WARD      |BLAKE
+    30|JAMES     |WARD
+    30|WARD      |ALLEN
+    30|MARTIN    |ALLEN
+    30|ALLEN     |JAMES
+    30|JAMES     |ALLEN
+    30|TURNER    |JAMES
+    30|BLAKE     |JAMES
+    30|BLAKE     |ALLEN
+    30|TURNER    |ALLEN
+    30|JAMES     |TURNER
+    30|BLAKE     |TURNER
+    30|MARTIN    |TURNER
+    30|MARTIN    |BLAKE
+    30|TURNER    |BLAKE
+    30|JAMES     |BLAKE
+    30|ALLEN     |MARTIN
+    30|WARD      |MARTIN
+    30|BLAKE     |MARTIN
+    30|TURNER    |MARTIN
+    30|JAMES     |MARTIN
+    30|WARD      |JAMES
+    30|MARTIN    |JAMES
+    30|ALLEN     |TURNER
+    30|WARD      |TURNER
+    30|ALLEN     |WARD
+    30|MARTIN    |WARD
+    30|BLAKE     |WARD
+    30|TURNER    |WARD
+    30|ALLEN     |BLAKE
+
+56 행이 선택되었습니다.
+
+SQL> select e.ename, e.job, d.dname, e.sal, s.grade from emp e
+  2  join dept d on e.deptno = d.deptno
+  3  join salgrade s on e.sal >=s.losal and e.sal<=s.hisal;
+
+ENAME     |JOB      |DNAME                       |  SAL|     GRADE
+----------|---------|----------------------------|-----|----------
+KING      |PRESIDENT|ACCOUNTING                  | 5000|         5
+FORD      |ANALYST  |RESEARCH                    | 3300|         5
+SCOTT     |ANALYST  |RESEARCH                    | 3000|         4
+JONES     |MANAGER  |RESEARCH                    | 2975|         4
+BLAKE     |MANAGER  |SALES                       | 2850|         4
+CLARK     |MANAGER  |ACCOUNTING                  | 2450|         4
+ALLEN     |SALESMAN |SALES                       | 1600|         3
+TURNER    |SALESMAN |SALES                       | 1500|         3
+MILLER    |CLERK    |ACCOUNTING                  | 1300|         2
+WARD      |SALESMAN |SALES                       | 1250|         2
+MARTIN    |SALESMAN |SALES                       | 1250|         2
+ADAMS     |CLERK    |RESEARCH                    | 1100|         1
+JAMES     |CLERK    |SALES                       |  950|         1
+SMITH     |CLERK    |RESEARCH                    |  800|         1
+
+14 행이 선택되었습니다.
+
+SQL> select ename, hiredate from emp where hiredate>(select hirerdate from emp where ename = 'BLAKE');
+select ename, hiredate from emp where hiredate>(select hirerdate from emp where ename = 'BLAKE')
+                                                       *
+1행에 오류:
+ORA-00904: "HIRERDATE": 부적합한 식별자
+
+
+SQL> select ename, hiredate from emp where hiredate>(select hiredate from emp where ename = 'BLAKE');
+
+ENAME     |HIREDATE
+----------|--------
+MARTIN    |81/09/28
+CLARK     |81/06/09
+SCOTT     |87/04/19
+KING      |81/11/17
+TURNER    |81/09/08
+ADAMS     |87/05/23
+JAMES     |81/12/03
+FORD      |81/12/03
+MILLER    |82/01/23
+
+9 행이 선택되었습니다.
+
+SQL> select ename, hiredate from emp where hiredate<(select hiredate from emp where ename = 'BLAKE');
+
+ENAME     |HIREDATE
+----------|--------
+SMITH     |80/12/17
+ALLEN     |81/02/20
+WARD      |81/02/22
+JONES     |81/04/02
+
+SQL> select e1.ename, e1.hiredate from emp e1 join emp e2 on e1.hiredate<e2.hiredate and e2.ename = 'BLACK'
+  2  ;
+
+선택된 레코드가 없습니다.
+
+SQL> select e1.ename, e1.hiredate from emp e1 join emp e2 on e1.hiredate<e2.hiredate where e2.ename = 'BLACK';
+
+선택된 레코드가 없습니다.
+
+SQL> select e1.ename, e1.hiredate from emp e1 join emp e2 on e2.ename = 'BLAKE' where e1.hiredate <e2.hiredate;
+
+ENAME     |HIREDATE
+----------|--------
+SMITH     |80/12/17
+ALLEN     |81/02/20
+WARD      |81/02/22
+JONES     |81/04/02
+
+SQL> select e1.ename, e1.hiredate from emp e1 join emp e2 on e1.hiredate<e2.hiredate where e2.ename = 'BLAKE';
+
+ENAME     |HIREDATE
+----------|--------
+SMITH     |80/12/17
+ALLEN     |81/02/20
+WARD      |81/02/22
+JONES     |81/04/02
+
+SQL> select count(DISTINCT mgr) AS "Number of Managers" from emp;
+
+Number of Managers
+------------------
+                 6
+
+SQL> select mgr, sal from emp group by mgr;
+select mgr, sal from emp group by mgr
+            *
+1행에 오류:
+ORA-00979: GROUP BY 표현식이 아닙니다.
+
+
+SQL> select mgr, min(sal) from emp group by mgr;
+
+  MGR|  MIN(SAL)
+-----|----------
+ 7839|      2450
+     |      5000
+ 7782|      1300
+ 7698|       950
+ 7902|       800
+ 7566|      3000
+ 7788|      1100
+
+7 행이 선택되었습니다.
+
+SQL> select mgr, min(sal) from emp where mgr is not null group by mgr having min(sal)>=1000 order by min(sal) DESC;
+
+  MGR|  MIN(SAL)
+-----|----------
+ 7566|      3000
+ 7839|      2450
+ 7782|      1300
+ 7788|      1100
+
+SQL> select d.dname, d.loc, count(e.deptno), round(e.sal,2) from dept d join emp e on d.deptno = e.deptno group by e.deptno;
+select d.dname, d.loc, count(e.deptno), round(e.sal,2) from dept d join empe on d.deptno = e.deptno group by e.deptno
+       *
+1행에 오류:
+ORA-00979: GROUP BY 표현식이 아닙니다.
+
+
+SQL> select d.dname, d.loc, count(e.deptno), round(e.sal,2) from dept d join emp e on d.deptno = e.deptno;
+select d.dname, d.loc, count(e.deptno), round(e.sal,2) from dept d join empe on d.deptno = e.deptno
+       *
+1행에 오류:
+ORA-00937: 단일 그룹의 그룹 함수가 아닙니다
+
+
+SQL> select d.dname, d.loc, round(e.sal,2) from dept d join emp e on d.deptno = e.deptno;
+
+DNAME                       |LOC                       |ROUND(E.SAL,2)
+----------------------------|--------------------------|--------------
+ACCOUNTING                  |NEW YORK                  |          2450
+ACCOUNTING                  |NEW YORK                  |          5000
+ACCOUNTING                  |NEW YORK                  |          1300
+RESEARCH                    |DALLAS                    |          2975
+RESEARCH                    |DALLAS                    |          3300
+RESEARCH                    |DALLAS                    |          1100
+RESEARCH                    |DALLAS                    |           800
+RESEARCH                    |DALLAS                    |          3000
+SALES                       |CHICAGO                   |          1250
+SALES                       |CHICAGO                   |          1500
+SALES                       |CHICAGO                   |          1600
+SALES                       |CHICAGO                   |           950
+SALES                       |CHICAGO                   |          2850
+SALES                       |CHICAGO                   |          1250
+
+14 행이 선택되었습니다.
+
+SQL> select d.dname, d.loc, count(e.deptno) round(e.sal,2) from dept d joinemp e on d.deptno = e.deptno group by e.deptno;
+select d.dname, d.loc, count(e.deptno) round(e.sal,2) from dept d join emp e on d.deptno = e.deptno group by e.deptno
+                                            *
+1행에 오류:
+ORA-00923: FROM 키워드가 필요한 위치에 없습니다.
+
+
+SQL> select d.dname, d.loc, count(e.deptno) round(e.sal,2) from dept d joinemp e on d.deptno = e.deptno group by d.dname, d.loc;
+select d.dname, d.loc, count(e.deptno) round(e.sal,2) from dept d join emp e on d.deptno = e.deptno group by d.dname, d.loc
+                                            *
+1행에 오류:
+ORA-00923: FROM 키워드가 필요한 위치에 없습니다.
+
+
+SQL> select d.dname, d.loc, count(*), round(e.sal,2) from dept d join emp eon d.deptno = e.deptno group by d.dname, d.loc;
+select d.dname, d.loc, count(*), round(e.sal,2) from dept d join emp e on d.deptno = e.deptno group by d.dname, d.loc
+                                       *
+1행에 오류:
+ORA-00979: GROUP BY 표현식이 아닙니다.
+
+
+SQL> select d.dname, d.loc, count(*), round(avg(e.sal),2) from dept d join emp e on d.deptno = e.deptno group by d.dname, d.loc;
+
+DNAME                       |LOC                       |  COUNT(*)|ROUND(AVG(E.SAL),2)
+----------------------------|--------------------------|----------|-------------------
+RESEARCH                    |DALLAS                    |         5| 2235
+SALES                       |CHICAGO                   |         6|   1566.67
+ACCOUNTING                  |NEW YORK                  |         3|   2916.67
+
+SQL>
